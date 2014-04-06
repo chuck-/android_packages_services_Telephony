@@ -643,6 +643,8 @@ public class CallFeaturesSetting extends PreferenceActivity
             }
         } else if (preference == mButtonSipCallOptions) {
             handleSipCallOptionsChange(objValue);
+        } else if (preference == mButtonVoiceQuality) {
+            updateVoiceQualitySummary((String) objValue);
         } else if (preference == mEnableForwardLookup
                 || preference == mEnablePeopleLookup
                 || preference == mEnableReverseLookup) {
@@ -651,9 +653,7 @@ public class CallFeaturesSetting extends PreferenceActivity
                 || preference == mChoosePeopleLookupProvider
                 || preference == mChooseReverseLookupProvider) {
             saveLookupProviderSetting(preference, (String) objValue);
-		}
-        } else if (preference == mButtonVoiceQuality) {
-            updateVoiceQualitySummary((String) objValue);
+        }
         // always let the preference setting proceed.
         return true;
     }
