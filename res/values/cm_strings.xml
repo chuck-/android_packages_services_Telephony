@@ -76,10 +76,11 @@
     <string name="enable_reverse_lookup_title">Reverse lookup</string>
     <string name="enable_reverse_lookup_summary">Look up information about the person or place for unknown numbers on incoming calls</string>
     <string name="choose_lookup_providers">Choose lookup providers</string>
-    <string name="choose_forward_lookup_provider_title">Choose forward lookup provider</string>
-    <string name="choose_people_lookup_provider_title">Choose people lookup provider</string>
-    <string name="choose_reverse_lookup_provider_title">Choose reverse lookup provider</string>
+    <string name="choose_forward_lookup_provider_title">Forward lookup provider</string>
+    <string name="choose_people_lookup_provider_title">People lookup provider</string>
+    <string name="choose_reverse_lookup_provider_title">Reverse lookup provider</string>
 
+<<<<<<< HEAD
     <!-- Voice quality filter -->
     <string name="voice_quality_preferences_title">Voice quality</string>
     <string name="voice_quality_summary">Using profile: <xliff:g id="value">%s</xliff:g></string>
@@ -89,4 +90,18 @@
     <string name="voice_quality_entry_crisp">Crisp</string>
     <string name="voice_quality_entry_bright">Bright</string>
 
+=======
+    <!-- Set Subscription screen: label no sim -->
+    <string name="sub_no_sim">No SIM</string>
+    <string name="multi_sim_entry_format" translatable="false"><xliff:g id="operator">%1$s</xliff:g>-<xliff:g id="index">%2$d</xliff:g></string>
+
+    <!-- Multi-SIM dial target selection -->
+    <string name="msim_call_selector_title">Call <xliff:g id="number">%s</xliff:g> via</string>
+    <string name="msim_call_selector_item">SIM<xliff:g id="index">%1$d</xliff:g>: <xliff:g id="operator">%2$s</xliff:g></string>
+
+    <!-- Chinese Reverse Lookup Provider -->
+    <string name="cyngn_reverse_lookup_provider_package" translatable="false">com.cyngn.chineselocationlookup</string>
+    <string name="cyngn_reverse_lookup_provider_name">Cyngn Chinese (CN)</string>
+    <string name="cyngn_reverse_lookup_provider_value" translatable="false">CyngnChinese</string>
+>>>>>>> b4f248762fce006a73dc4cf3ddecbdf0884065f7
 </resources>

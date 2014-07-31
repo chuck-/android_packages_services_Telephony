@@ -51,6 +51,7 @@ import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.telephony.MSimTelephonyManager;
+import static android.telephony.TelephonyManager.SIM_STATE_ABSENT;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout.LayoutParams;
@@ -82,6 +83,7 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
     private AirplaneModeBroadcastReceiver mReceiver;
     //mIsForeground is added to track if activity is in foreground
     private boolean mIsForeground = false;
+    private AlertDialog mAlertDialog;
 
     //String keys for preference lookup
     private static final String PREF_PARENT_KEY = "subscr_parent";
@@ -177,6 +179,16 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
     public void onPause() {
         super.onPause();
         mIsForeground = false;
+        if (mAlertDialog != null) {
+            try {
+                Log.d(TAG, "onPause disimissing dialog = " + mAlertDialog);
+                mAlertDialog.dismiss();
+            } catch (IllegalArgumentException e) {
+                //This can happen if the dialog is not currently showing.
+                Log.w(TAG, "Exception dismissing dialog. Ex=" + e);
+            }
+            mAlertDialog = null;
+        }
     }
 
     protected void onDestroy () {
@@ -194,7 +206,8 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
     private void notifyNewCardAvailable() {
         Log.d(TAG, "notifyNewCardAvailable()");
 
-        new AlertDialog.Builder(this).setMessage(R.string.new_cards_available)
+        mAlertDialog = new AlertDialog.Builder(this)
+            .setMessage(R.string.new_cards_available)
             .setTitle(R.string.config_sub_title)
             .setIcon(android.R.drawable.ic_dialog_alert)
             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -204,12 +217,13 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
                         startActivity(msimSettings);
                     }
                 })
-            .show()
             .setOnDismissListener(new DialogInterface.OnDismissListener() {
                     public void onDismiss(DialogInterface dialog) {
+                        mAlertDialog = null;
                         finish();
                     }
-                });
+                })
+            .show();
     }
 
     private void updateCheckBoxes() {
@@ -266,7 +280,6 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
     private void populateList() {
         PreferenceScreen prefParent = (PreferenceScreen) getPreferenceScreen().
                 findPreference(PREF_PARENT_KEY);
-        int[] subGroupTitle = {R.string.card_01, R.string.card_02, R.string.card_03};
 
         Log.d(TAG, "populateList:  mCardSubscrInfo.length = " + mCardSubscrInfo.length);
 
@@ -276,10 +289,16 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
             if ((cardSub != null ) && (cardSub.getLength() > 0)) {
                 int i = 0;
 
-                // Create a subgroup for the apps in card 01
+                MSimTelephonyManager tm = MSimTelephonyManager.getDefault();
+                String operatorName = tm.getSimState(k) != SIM_STATE_ABSENT
+                    ? tm.getNetworkOperatorName(k) : getString(R.string.sub_no_sim);
+                String subGroupTitle = getString(R.string.multi_sim_entry_format,
+                    operatorName, k + 1);
+
+                // Create a subgroup for the apps in each card
                 PreferenceCategory subGroup = new PreferenceCategory(this);
                 subGroup.setKey("sub_group_" + k);
-                subGroup.setTitle(subGroupTitle[k]);
+                subGroup.setTitle(subGroupTitle);
                 prefParent.addPreference(subGroup);
 
                 // Add each element as a CheckBoxPreference to the group
@@ -468,7 +487,7 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
     private void displayErrorDialog(int messageId) {
         Log.d(TAG, "errorMutipleDeactivate(): " + getResources().getString(messageId));
 
-        new AlertDialog.Builder(this)
+        mAlertDialog = new AlertDialog.Builder(this)
             .setTitle(R.string.config_sub_title)
             .setMessage(messageId)
             .setIcon(android.R.drawable.ic_dialog_alert)
@@ -478,13 +497,14 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
                         updateCheckBoxes();
                     }
                 })
-            .show()
             .setOnDismissListener(new DialogInterface.OnDismissListener() {
                     public void onDismiss(DialogInterface dialog) {
                         Log.d(TAG, "errorMutipleDeactivate:  onDismiss");
+                        mAlertDialog = null;
                         updateCheckBoxes();
                     }
-                });
+                })
+            .show();
     }
 
     private Handler mHandler = new Handler() {
@@ -611,18 +631,19 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
         }
 
         Log.d(TAG, "displayAlertDialog:  dispMsg = " + dispMsg);
-        new AlertDialog.Builder(this).setMessage(dispMsg)
+        mAlertDialog = new AlertDialog.Builder(this).setMessage(dispMsg)
             .setTitle(title)
             .setIcon(android.R.drawable.ic_dialog_alert)
             .setPositiveButton(android.R.string.yes, this)
-            .show()
-            .setOnDismissListener(this);
+            .setOnDismissListener(this)
+            .show();
     }
 
     // This is a method implemented for DialogInterface.OnDismissListener
     public void onDismiss(DialogInterface dialog) {
         // If the setSubscription failed for any of the sub, then don'd dismiss the
         // set subscription screen.
+        mAlertDialog = null;
         if(!subErr) {
             finish();
         }
@@ -631,7 +652,12 @@ public class SetSubscription extends PreferenceActivity implements View.OnClickL
     // This is a method implemented for DialogInterface.OnClickListener.
     // Used to dismiss the dialogs when they come up.
     public void onClick(DialogInterface dialog, int which) {
-        dialog.dismiss();
+        try {
+            dialog.dismiss();
+        } catch (IllegalArgumentException e) {
+            //This can happen if the dialog is not currently showing.
+            Log.w(TAG, "Exception dismissing dialog. Ex=" + e);
+        }
         updateCheckBoxes();
     }
 

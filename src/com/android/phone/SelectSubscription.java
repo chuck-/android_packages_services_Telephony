@@ -34,7 +34,9 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
+import android.provider.Settings;
 import android.telephony.MSimTelephonyManager;
+import static android.telephony.TelephonyManager.SIM_STATE_ABSENT;
 import android.util.Log;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
@@ -49,8 +51,6 @@ public class SelectSubscription extends  TabActivity {
 
     public static final String PACKAGE = "PACKAGE";
     public static final String TARGET_CLASS = "TARGET_CLASS";
-
-    private String[] tabLabel = {"SUB 1", "SUB 2", "SUB 3"};
 
     private TabSpec subscriptionPref;
 
@@ -75,12 +75,22 @@ public class SelectSubscription extends  TabActivity {
         String pkg = intent.getStringExtra(PACKAGE);
         String targetClass = intent.getStringExtra(TARGET_CLASS);
 
-        int numPhones = MSimTelephonyManager.getDefault().getPhoneCount();
+        // Fixed value for public intent
+        if (intent.getAction().equals(Settings.ACTION_DATA_ROAMING_SETTINGS)) {
+            pkg = "com.android.phone";
+            targetClass = "com.android.phone.MSimMobileNetworkSubSettings";
+        }
+
+        MSimTelephonyManager tm = MSimTelephonyManager.getDefault();
+
+        int numPhones = tm.getPhoneCount();
 
         for (int i = 0; i < numPhones; i++) {
-            log("Creating SelectSub activity = " + i);
-            subscriptionPref = tabHost.newTabSpec(tabLabel[i]);
-            subscriptionPref.setIndicator(tabLabel[i]);
+            String operatorName = tm.getSimState(i) != SIM_STATE_ABSENT
+                    ? tm.getNetworkOperatorName(i) : getString(R.string.sub_no_sim);
+            String label = getString(R.string.multi_sim_entry_format, operatorName, i + 1);
+            subscriptionPref = tabHost.newTabSpec(label);
+            subscriptionPref.setIndicator(label);
             intent = new Intent().setClassName(pkg, targetClass)
                     .setAction(intent.getAction()).putExtra(SUBSCRIPTION_KEY, i);
             subscriptionPref.setContent(intent);

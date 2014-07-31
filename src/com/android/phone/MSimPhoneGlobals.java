@@ -209,7 +209,7 @@ public class MSimPhoneGlobals extends PhoneGlobals {
 
             CallLogger callLogger = new CallLogger(this, new CallLogAsync());
 
-            callGatewayManager = new CallGatewayManager();
+            callGatewayManager = CallGatewayManager.getInstance();
 
             // Create the CallController singleton, which is the interface
             // to the telephony layer for user-initiated telephony functionality
@@ -252,7 +252,7 @@ public class MSimPhoneGlobals extends PhoneGlobals {
             callHandlerServiceProxy = new CallHandlerServiceProxy(this, callModeler,
                     callCommandService, audioRouter);
 
-            phoneMgr = PhoneInterfaceManager.init(this, phone, callHandlerServiceProxy);
+            phoneMgr = PhoneInterfaceManager.init(this, phone, callHandlerServiceProxy, callModeler, dtmfTonePlayer);
             phoneMgrMSim = MSimPhoneInterfaceManager.init(this, phone, callHandlerServiceProxy);
 
             // Create the CallNotifer singleton, which handles
@@ -293,7 +293,6 @@ public class MSimPhoneGlobals extends PhoneGlobals {
             intentFilter.addAction(TelephonyIntents.ACTION_SERVICE_STATE_CHANGED);
             intentFilter.addAction(TelephonyIntents.ACTION_EMERGENCY_CALLBACK_MODE_CHANGED);
             intentFilter.addAction(MSimTelephonyIntents.ACTION_DEFAULT_SUBSCRIPTION_CHANGED);
-            intentFilter.addAction(TelephonyIntents.ACTION_MANAGED_ROAMING_IND);
             if (mTtyEnabled) {
                 intentFilter.addAction(TtyIntent.TTY_PREFERRED_MODE_CHANGE_ACTION);
             }
@@ -683,11 +682,19 @@ public class MSimPhoneGlobals extends PhoneGlobals {
     }
 
     /*
-     * Gets User preferred Data subscription setting
+     * Gets current Data subscription setting
      */
     @Override
     public int getDataSubscription() {
         return MSimPhoneFactory.getDataSubscription();
+    }
+
+    /*
+     * Gets default/user preferred Data subscription setting
+     */
+    @Override
+    public int getDefaultDataSubscription() {
+        return MSimPhoneFactory.getDefaultDataSubscription();
     }
 
     /*

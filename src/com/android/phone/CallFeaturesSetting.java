@@ -73,12 +73,7 @@ import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.telephony.cdma.TtyIntent;
 import com.android.phone.sip.SipSharedPreferences;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Top level "Call settings" UI; see res/xml/call_feature_setting.xml
@@ -191,7 +186,11 @@ public class CallFeaturesSetting extends PreferenceActivity
     private static final String BUTTON_GSM_UMTS_OPTIONS = "button_gsm_more_expand_key";
     private static final String BUTTON_CDMA_OPTIONS = "button_cdma_more_expand_key";
 
+<<<<<<< HEAD
     static final String BUTTON_VOICE_QUALITY_KEY = "button_voice_quality_key";
+=======
+    private static final String BUTTON_CALL_UI_IN_BACKGROUND = "bg_incall_screen";
+>>>>>>> b4f248762fce006a73dc4cf3ddecbdf0884065f7
 
     private static final String VM_NUMBERS_SHARED_PREFERENCES_NAME = "vm_numbers";
 
@@ -294,6 +293,7 @@ public class CallFeaturesSetting extends PreferenceActivity
     private CheckBoxPreference mPlayDtmfTone;
     private CheckBoxPreference mButtonAutoRetry;
     private CheckBoxPreference mButtonHAC;
+    private CheckBoxPreference mButtonCallUiInBackground;
     private ListPreference mButtonDTMF;
     private ListPreference mButtonTTY;
     private CheckBoxPreference mButtonNoiseSuppression;
@@ -537,6 +537,8 @@ public class CallFeaturesSetting extends PreferenceActivity
             Settings.System.putInt(mPhone.getContext().getContentResolver(),
                     Settings.System.NOISE_SUPPRESSION, nsp);
             return true;
+        } else if (preference == mButtonCallUiInBackground) {
+            return true;
         } else if (preference == mButtonAutoRetry) {
             android.provider.Settings.Global.putInt(mPhone.getContext().getContentResolver(),
                     android.provider.Settings.Global.CALL_AUTO_RETRY,
@@ -608,6 +610,10 @@ public class CallFeaturesSetting extends PreferenceActivity
             int mwi_notification = mMwiNotification.isChecked() ? 1 : 0;
             Settings.System.putInt(mPhone.getContext().getContentResolver(),
                     Settings.System.ENABLE_MWI_NOTIFICATION, mwi_notification);
+        } else if (preference == mButtonCallUiInBackground) {
+            Settings.System.putInt(mPhone.getContext().getContentResolver(),
+                    Settings.System.CALL_UI_IN_BACKGROUND,
+                    (Boolean) objValue ? 1 : 0);
         } else if (preference == mVoicemailProviders) {
             final String newProviderKey = (String) objValue;
             if (DBG) {
@@ -1624,6 +1630,8 @@ public class CallFeaturesSetting extends PreferenceActivity
         mButtonHAC = (CheckBoxPreference) findPreference(BUTTON_HAC_KEY);
         mButtonTTY = (ListPreference) findPreference(BUTTON_TTY_KEY);
         mButtonNoiseSuppression = (CheckBoxPreference) findPreference(BUTTON_NOISE_SUPPRESSION_KEY);
+        mButtonCallUiInBackground =
+                (CheckBoxPreference) findPreference(BUTTON_CALL_UI_IN_BACKGROUND);
         mVoicemailProviders = (ListPreference) findPreference(BUTTON_VOICEMAIL_PROVIDER_KEY);
 		mButtonVoiceQuality = (ListPreference) findPreference(BUTTON_VOICE_QUALITY_KEY);
 
@@ -1698,6 +1706,9 @@ public class CallFeaturesSetting extends PreferenceActivity
                 prefSet.removePreference(mButtonNoiseSuppression);
                 mButtonNoiseSuppression = null;
             }
+       }
+        if (mButtonCallUiInBackground != null) {
+            mButtonCallUiInBackground.setOnPreferenceChangeListener(this);
         }
 
         if (!getResources().getBoolean(R.bool.world_phone)) {
@@ -1746,6 +1757,24 @@ public class CallFeaturesSetting extends PreferenceActivity
         mChooseForwardLookupProvider.setOnPreferenceChangeListener(this);
         mChoosePeopleLookupProvider.setOnPreferenceChangeListener(this);
         mChooseReverseLookupProvider.setOnPreferenceChangeListener(this);
+
+        if (PhoneUtils.isPackageInstalled(this, getString(R.string.cyngn_reverse_lookup_provider_package))) {
+            List<String> reverseLookupProviders = new LinkedList<String>(Arrays.asList(getResources().getStringArray(R.array.reverse_lookup_provider_names)));
+            List<String> reverseLookupProvidersValues = new LinkedList<String>(Arrays.asList(getResources().getStringArray(R.array.reverse_lookup_providers)));
+
+            reverseLookupProviders.add(getString(R.string.cyngn_reverse_lookup_provider_name));
+            reverseLookupProvidersValues.add(getString(R.string.cyngn_reverse_lookup_provider_value));
+
+            String[] reverseLookupArray = new String[reverseLookupProviders.size()];
+            String[] reverseLookupNameArray = new String[reverseLookupProvidersValues.size()];
+            reverseLookupArray = reverseLookupProviders.toArray(reverseLookupArray);
+            reverseLookupNameArray = reverseLookupProvidersValues.toArray(reverseLookupNameArray);
+            mChooseReverseLookupProvider.setEntries(reverseLookupArray);
+            mChooseReverseLookupProvider.setEntryValues(reverseLookupNameArray);
+        } else {
+            mChooseReverseLookupProvider.setEntries(getResources().getStringArray(R.array.reverse_lookup_provider_names));
+            mChooseReverseLookupProvider.setEntryValues(getResources().getStringArray(R.array.reverse_lookup_providers));
+        }
 
         restoreLookupProviders();
 
@@ -1955,8 +1984,15 @@ public class CallFeaturesSetting extends PreferenceActivity
             updatePreferredTtyModeSummary(settingsTtyMode);
         }
 
+<<<<<<< HEAD
         if (mButtonVoiceQuality != null) {
             updateVoiceQualitySummary(mButtonVoiceQuality.getValue());
+=======
+        if (mButtonCallUiInBackground != null) {
+            int callUiInBackground = Settings.System.getInt(getContentResolver(),
+                    Settings.System.CALL_UI_IN_BACKGROUND, 0);
+            mButtonCallUiInBackground.setChecked(callUiInBackground != 0);
+>>>>>>> b4f248762fce006a73dc4cf3ddecbdf0884065f7
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(

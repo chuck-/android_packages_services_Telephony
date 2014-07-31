@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-     Not a Contribution.
-
-     Copyright (C) 2011 The Android Open Source Project
+<!-- Copyright (C) 2013 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,12 +13,15 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true"
-        android:drawable="@drawable/call_btn_press" />
-    <item android:state_focused="true"
-        android:drawable="@drawable/call_btn_press" />
-    <item
-        android:drawable="@drawable/call_btn" />
-</selector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/actionbar_underline" />
+        </shape>
+    </item>
+    <item android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/actionbar_background_color" />
+        </shape>
+    </item>
+</layer-list>

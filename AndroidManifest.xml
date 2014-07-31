@@ -46,6 +46,9 @@
     <permission
         android:name="com.qti.permission.DIAG"
         android:protectionLevel="signatureOrSystem" />
+    <permission
+        android:name="com.qti.permission.IMS"
+        android:protectionLevel="signatureOrSystem" />
 
     <uses-permission android:name="android.permission.BIND_CALL_SERVICE" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
@@ -211,7 +214,9 @@
 
         <activity android:name="MSimDialerActivity"
                 android:permission="android.permission.CALL_PRIVILEGED"
-                android:configChanges="orientation|keyboardHidden">
+                android:theme="@*android:style/Theme.Holo.Dialog.Alert"
+                android:configChanges="orientation|keyboardHidden"
+                android:excludeFromRecents="true">
         </activity>
 
         <activity android:name="OutgoingCallBroadcaster"
@@ -358,7 +363,7 @@
         <activity android:name="NetworkSetting"
                 android:label="@string/networks"
                 android:configChanges="orientation|screenSize|keyboardHidden"
-                android:theme="@android:style/Theme.Holo.DialogWhenLarge">
+                android:theme="@style/Theme.Settings">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.settings.NETWORK_OPERATOR_SETTINGS" />
@@ -418,7 +423,7 @@
 
         <activity android:name="CellBroadcastSms"
             android:label="@string/cell_broadcast_sms"
-            android:theme="@android:style/Theme.Holo.DialogWhenLarge">
+            android:theme="@style/Theme.Settings">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -499,7 +504,7 @@
         <!-- data roaming setting -->
         <activity android:name="RoamingSetting"
                 android:label="@string/roaming"
-                android:theme="@android:style/Theme.Holo.DialogWhenLarge">
+                android:theme="@style/Theme.Settings">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -513,7 +518,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.settings.DATA_ROAMING_SETTINGS" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -561,10 +565,11 @@
         <activity android:name="SelectSubscription"
             android:label="@string/callind_multi_sim"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.Holo.DialogWhenLarge">
+            android:theme="@style/Theme.Settings">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.settings.DATA_ROAMING_SETTINGS" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -588,6 +593,14 @@
                 <action android:name="android.bluetooth.IBluetoothHeadsetPhone" />
             </intent-filter>
         </service>
+
+        <!-- Broadcast receiver to set default handlers for various actions
+             depending if MSim is available -->
+        <receiver android:name="MSimActivityStateUpdater" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <!-- Broadcast Receiver that will process BOOT Complete and launch OTA -->
         <receiver android:name="OtaStartupReceiver" android:exported="false"
@@ -642,7 +655,7 @@
                 android:uiOptions="splitActionBarWhenNarrow">
         </activity>
         <activity android:name=".ims.ImsEditor"
-                android:theme="@android:style/Theme.Holo.DialogWhenLarge"
+                android:theme="@style/Theme.Settings"
                 android:configChanges="orientation|screenSize|keyboardHidden"
                 android:uiOptions="splitActionBarWhenNarrow">
         </activity>
@@ -696,7 +709,7 @@
         </receiver>
 
         <!-- BroadcastReceiver for receiving Intents from Notification mechanism. -->
-        <receiver android:name="PhoneGlobals$NotificationBroadcastReceiver" exported="false">
+        <receiver android:name="PhoneGlobals$NotificationBroadcastReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="com.android.phone.ACTION_HANG_UP_ONGOING_CALL" />
                 <action android:name="com.android.phone.ACTION_CALL_BACK_FROM_NOTIFICATION" />
@@ -718,15 +731,6 @@
             android:label="@string/set_subscription"
             android:theme="@android:style/Theme.Holo.Dialog"
             android:configChanges="orientation|keyboardHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="ManagedRoaming"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

@@ -517,6 +517,10 @@
     <string name="roaming_reenable_message">You\'ve lost data connectivity because you left your home network with data roaming turned off.</string>
     <!-- Mobile network settings screen, dialog message when user selects the Data roaming check box -->
     <string name="roaming_warning">Allow data roaming? You may incur significant roaming charges!</string>
+
+    <!-- USSD aggregation dialog box: separator strings between messages (new-lines will be added before and after) -->
+    <string name="ussd_dialog_sep" translatable="false">----------</string>
+
     <string name="gsm_umts_options">GSM/UMTS Options</string>
     <string name="cdma_options">CDMA Options</string>
     <string name="mobile_network_setting">Mobile network settings</string>
@@ -829,7 +833,7 @@
     <string name="auto_retry_mode_title">Auto-retry</string>
     <string name="auto_retry_mode_summary">Enable Auto-retry mode</string>
     <!-- TTY Mode change is NOT allowed during a VT call -->
-    <string name="tty_mode_not_allowed_vt_call">TTY mode change is not allowed during a VT call</string>
+    <string name="tty_mode_not_allowed_vt_call">TTY mode change is not allowed during a video call</string>
 
     <!-- FDN list screen: menu item label -->
     <string name="menu_add">Add contact</string>
@@ -1175,15 +1179,15 @@
 
     <!-- XDivert Settings -->
     <!-- Title for the XDivert Feature displayed in Call Settings -->
-    <string name="xdivert_title">X-Divert</string>
+    <string name="xdivert_title" translatable="false">X-Divert</string>
     <!-- Summary for the XDivert Feature displayed in Call Settings -->
     <string name="xdivert_summary">CFNRc Settings</string>
     <string name="phone_numbers">Enter phone numbers</string>
     <string name="sub1LineNumber">Sub 1 number:</string>
     <string name="sub2LineNumber">Sub 2 number:</string>
     <string name="proceed">Proceed</string>
-    <string name="xdivert_button">X-Divert</string>
-    <string name="xdivert_setting">X-Divert</string>
+    <string name="xdivert_button" translatable="false">X-Divert</string>
+    <string name="xdivert_setting" translatable="false">X-Divert</string>
     <string name="sum_xdivert_enabled">X-Divert enabled</string>
     <string name="sum_xdivert_disabled">X-Divert disabled</string>
     <string name="xdivert_not_supported">X-Divert not supported for CDMA</string>
@@ -1197,15 +1201,6 @@
 
     <!-- Title for the dialog used to display CDMA DisplayInfo -->
     <string name="network_message">Network message</string>
-
-    <!-- Shown in "Managed Roaming" dialog when registration is denied with rejCode 10. -->
-    <string name="managed_roaming_title">Managed roaming</string>
-    <string name="managed_roaming_title_sub1">Managed roaming (SUB 1)</string>
-    <string name="managed_roaming_title_sub2">Managed roaming (SUB 2)</string>
-    <string name="managed_roaming_title_sub3">Managed roaming (SUB 3)</string>
-    <string name="managed_roaming_dialog_content">Network with limited service found. Do you want to initiate a network search?</string>
-    <string name="managed_roaming_dialog_ok_button">Yes</string>
-    <string name="managed_roaming_dialog_cancel_button">No</string>
 
     <!-- OTA-specific strings -->
     <!-- Title shown on OTA screen -->
@@ -1551,6 +1546,13 @@
     <string name="ims_menu_discard">Discard</string>
     <!-- Title for the button to remove a IMS account. [CHAR LIMIT=NONE] -->
     <string name="remove_ims_account">Remove account</string>
+    <!-- VT call quality settings. -->
+    <string translatable="false" name="ims_vt_call_quality">VtCallQuality</string>
+    <string name="ims_vt_call_quality_title">Video call quality</string>
+    <string name="ims_vt_call_quality_low">Low</string>
+    <string name="ims_vt_call_quality_high">High</string>
+    <string name="ims_vt_call_quality_unknown">Unknown</string>
+    <string name="ims_vt_call_quality_set_failed">Failed to set video quality</string>
     <!-- End of IMS settings related strings -->
 
     <!-- Dialog title to notify user that Voice calling is not supported
@@ -1785,29 +1787,9 @@
     <string name="cursorError">Invalid cursor data</string>
     <!-- Set Subscription screen: set subscription option name -->
     <string name="set_subscription">Select subscription</string>
-    <!-- Set Subscription screen: label Card 1 -->
-    <string name="card_01">Card 1 / SUB 1</string>
-    <!-- Set Subscription screen: label Card 2 -->
-    <string name="card_02">Card 2 / SUB 2</string>
-    <!-- Set Subscription screen: label Card 3 -->
-    <string name="card_03">Card 3 / SUB 3</string>
-
-    <!-- Set dual dialer for MultiSim -->
-    <string name="place_a_call1">Subscription 1</string>
-    <string name="place_a_call2">Subscription 2</string>
-    <string name="place_a_call3">Subscription 3</string>
-    <string name="count_down">Seconds: </string>
-    <string name="call_number">To: </string>
-    <string name="cancel_call">Cancel</string>
 
     <!-- Set Subscription screen: Message shown in error dialog -->
     <string name="set_subscription_error_atleast_one">Select at least one subscription</string>
-    <!-- Set Subscription screen: label sub 1 -->
-    <string name="sub_1">SUB 1</string>
-    <!-- Set Subscription screen: label sub 2 -->
-    <string name="sub_2">SUB 2</string>
-    <!-- Set Subscription screen: label sub 3 -->
-    <string name="sub_3">SUB 3</string>
     <!-- Set Subscription screen: Progress message -->
     <string name="set_uicc_subscription_progress">Setting subscription\u2026</string>
     <!-- Set Subscription screen: Set subscriptio success -->
@@ -1820,7 +1802,6 @@
     <string name="set_sub_2">Subscription 2: </string>
     <!-- Set Subscription screen: Subscription 3 -->
     <string name="set_sub_3">Subscription 3: </string>
-    <!-- Set Subscription screen: Subscription activate success -->
     <!-- Set Subscription screen: Subscription activate success -->
     <string name="set_sub_activate_success">Activation successful</string>
     <!-- Set Subscription screen: Subscription deactivate success -->
@@ -1848,4 +1829,6 @@
     <!-- Set Subscription screen: Deactivate All subscription not supported -->
     <string name="set_sub_not_supported_phone_in_call">Activating or deactivating subscriptions is not allowed during a call.</string>
 
+    <!-- Manual PLMN scan data disconnect dialog text -->
+    <string name="disconnect_data_confirm">Data service needs to be disconnected temporarily. Are you sure you want to continue?</string>
 </resources>
