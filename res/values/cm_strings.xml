@@ -80,17 +80,6 @@
     <string name="choose_people_lookup_provider_title">People lookup provider</string>
     <string name="choose_reverse_lookup_provider_title">Reverse lookup provider</string>
 
-<<<<<<< HEAD
-    <!-- Voice quality filter -->
-    <string name="voice_quality_preferences_title">Voice quality</string>
-    <string name="voice_quality_summary">Using profile: <xliff:g id="value">%s</xliff:g></string>
-    <!-- Do not remove those, they're used from overlays. -->
-    <string name="voice_quality_entry_normal">Normal</string>
-    <string name="voice_quality_entry_clear">Clear</string>
-    <string name="voice_quality_entry_crisp">Crisp</string>
-    <string name="voice_quality_entry_bright">Bright</string>
-
-=======
     <!-- Set Subscription screen: label no sim -->
     <string name="sub_no_sim">No SIM</string>
     <string name="multi_sim_entry_format" translatable="false"><xliff:g id="operator">%1$s</xliff:g>-<xliff:g id="index">%2$d</xliff:g></string>
@@ -103,5 +92,13 @@
     <string name="cyngn_reverse_lookup_provider_package" translatable="false">com.cyngn.chineselocationlookup</string>
     <string name="cyngn_reverse_lookup_provider_name">Cyngn Chinese (CN)</string>
     <string name="cyngn_reverse_lookup_provider_value" translatable="false">CyngnChinese</string>
->>>>>>> b4f248762fce006a73dc4cf3ddecbdf0884065f7
+
+    <!-- Voice quality filter -->
+    <string name="voice_quality_preferences_title">Voice quality</string>
+    <string name="voice_quality_summary">Using profile: <xliff:g id="value">%s</xliff:g></string>
+    <!-- Do not remove those, they're used from overlays. -->
+    <string name="voice_quality_entry_normal">Normal</string>
+    <string name="voice_quality_entry_clear">Clear</string>
+    <string name="voice_quality_entry_crisp">Crisp</string>
+    <string name="voice_quality_entry_bright">Bright</string>
 </resources>

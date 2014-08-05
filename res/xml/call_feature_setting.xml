@@ -116,7 +116,6 @@
       android:title="@string/other_settings"
       android:persistent="false" />
 
-<<<<<<< HEAD
   <PreferenceScreen
       android:key="button_voicemail_category_key"
       android:title="@string/voicemail"
@@ -179,8 +178,6 @@
       android:entries="@array/voice_quality_entries"
       android:entryValues="@array/voice_quality_values"/>
 
-=======
->>>>>>> b4f248762fce006a73dc4cf3ddecbdf0884065f7
   <CheckBoxPreference
       android:key="button_play_dtmf_tone"
       android:title="@string/dtmf_tone_enable_title"

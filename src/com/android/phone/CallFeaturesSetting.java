@@ -186,11 +186,10 @@ public class CallFeaturesSetting extends PreferenceActivity
     private static final String BUTTON_GSM_UMTS_OPTIONS = "button_gsm_more_expand_key";
     private static final String BUTTON_CDMA_OPTIONS = "button_cdma_more_expand_key";
 
-<<<<<<< HEAD
+
     static final String BUTTON_VOICE_QUALITY_KEY = "button_voice_quality_key";
-=======
+
     private static final String BUTTON_CALL_UI_IN_BACKGROUND = "bg_incall_screen";
->>>>>>> b4f248762fce006a73dc4cf3ddecbdf0884065f7
 
     private static final String VM_NUMBERS_SHARED_PREFERENCES_NAME = "vm_numbers";
 
@@ -1984,16 +1983,16 @@ public class CallFeaturesSetting extends PreferenceActivity
             updatePreferredTtyModeSummary(settingsTtyMode);
         }
 
-<<<<<<< HEAD
-        if (mButtonVoiceQuality != null) {
-            updateVoiceQualitySummary(mButtonVoiceQuality.getValue());
-=======
         if (mButtonCallUiInBackground != null) {
             int callUiInBackground = Settings.System.getInt(getContentResolver(),
                     Settings.System.CALL_UI_IN_BACKGROUND, 0);
             mButtonCallUiInBackground.setChecked(callUiInBackground != 0);
->>>>>>> b4f248762fce006a73dc4cf3ddecbdf0884065f7
         }
+        
+        if (mButtonVoiceQuality != null) {
+            updateVoiceQualitySummary(mButtonVoiceQuality.getValue());
+        }
+        
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(
                 mPhone.getContext());
