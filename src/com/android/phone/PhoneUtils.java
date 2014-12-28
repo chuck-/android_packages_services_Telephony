@@ -41,6 +41,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.os.SystemProperties;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.MSimTelephonyManager;
@@ -1333,6 +1334,7 @@ public class PhoneUtils {
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
                                     sUssdMsg.setLength(0);
+                                    sUssdDialog = null;
                                 }
                             })
                             .create();
@@ -2278,6 +2280,28 @@ public class PhoneUtils {
                 sConnectionMuteTable.put(cn, Boolean.valueOf(muted));
             }
         }
+    }
+
+    static void resetAudioStreamVolume() {
+        PhoneGlobals app = PhoneGlobals.getInstance();
+        BluetoothManager btManager = app.getBluetoothManager();
+        AudioManager audioManager = (AudioManager) app.getSystemService(Context.AUDIO_SERVICE);
+        // determine actual streamType
+        int streamType = AudioManager.STREAM_VOICE_CALL;
+        if (btManager.isBluetoothHeadsetAudioOn()) {
+            streamType = AudioManager.STREAM_BLUETOOTH_SCO;
+        }
+        // determine volume and 1 level lower volume (lowest level can be 0)
+        int volume = audioManager.getStreamVolume(streamType);
+        int lowerVolume = volume - 1;
+        if (lowerVolume < 0) {
+            lowerVolume = 0;
+        }
+        log("resetAudioStreamVolume (streamType=" + streamType + ", streamVolume=" + volume + ")...");
+        // It's important to change it to another volume before restoring the original volume,
+        // otherwise the volume change will NOT be triggered!!
+        audioManager.setStreamVolume(streamType, lowerVolume, 0);
+        audioManager.setStreamVolume(streamType, volume, 0);
     }
 
     static boolean isInEmergencyCall(CallManager cm) {
@@ -3437,21 +3461,52 @@ public class PhoneUtils {
     static class PhoneSettings {
         /* vibration preferences */
         static boolean vibOn45Secs(Context context) {
-            return getPrefs(context).getBoolean("button_vibrate_45", false);
+            return vibOn45Secs(context, -1);
+        }
+        static boolean vibOn45Secs(Context context, int subscription) {
+            return getPrefs(context).getBoolean(getKeyForSubscription("button_vibrate_45",
+                            subscription), false);
         }
         static boolean vibHangup(Context context) {
-            return getPrefs(context).getBoolean("button_vibrate_hangup", false);
+            return vibHangup(context, -1);
+        }
+        static boolean vibHangup(Context context, int subscription) {
+            return getPrefs(context).getBoolean(getKeyForSubscription("button_vibrate_hangup",
+                            subscription), false);
         }
         static boolean vibOutgoing(Context context) {
-            return getPrefs(context).getBoolean("button_vibrate_outgoing", false);
+            return vibOutgoing(context, -1);
+        }
+        static boolean vibOutgoing(Context context, int subscription) {
+            return getPrefs(context).getBoolean(getKeyForSubscription("button_vibrate_outgoing",
+                    subscription), false);
         }
         static boolean vibCallWaiting(Context context) {
-            return getPrefs(context).getBoolean("button_vibrate_call_waiting", false);
+            return vibOutgoing(context, -1);
+        }
+        static boolean vibCallWaiting(Context context, int subscription) {
+            return getPrefs(context).getBoolean(getKeyForSubscription("button_vibrate_call_waiting",
+                    subscription), false);
         }
 
         /* misc. UI and behaviour preferences */
         static boolean showInCallEvents(Context context) {
-            return getPrefs(context).getBoolean("button_show_ssn_key", false);
+            return showInCallEvents(context, -1);
+        }
+        static boolean showInCallEvents(Context context, int subscription) {
+            return getPrefs(context).getBoolean(getKeyForSubscription("button_show_ssn_key",
+                    subscription), false);
+        }
+
+        public static String getKeyForSubscription(String key, int subscription) {
+            if (subscription == -1) return key;
+            return key + subscription;
+        }
+
+        static void setPreferenceKeyForSubscription(Preference preference, int subscription) {
+            if (subscription == -1 || preference == null) return;
+            String key = preference.getKey() + subscription;
+            preference.setKey(key);
         }
 
         private static SharedPreferences getPrefs(Context context) {
